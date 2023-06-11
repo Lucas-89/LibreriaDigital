@@ -66,9 +66,9 @@ namespace HerrProgLibreriaDigital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Nacionalidad,Contemporaneo")] Autor autor)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Nacionalidad,Contemporaneo")] AutorCreateViewModel autor)
         {
-            var autorModel = new AutorCreateViewModel();
+            var autorModel = new Autor();
             autorModel.Id = autor.Id;
             autorModel.Contemporaneo = autor.Contemporaneo;
             autorModel.Nombre = autor.Nombre;
@@ -111,7 +111,7 @@ namespace HerrProgLibreriaDigital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Nacionalidad,Contemporaneo")] AutorEditViewModel autor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Nacionalidad,Contemporaneo")] Autor autor)
         {
             
             if (id != autor.Id)
@@ -119,18 +119,23 @@ namespace HerrProgLibreriaDigital.Controllers
                 return NotFound();
             }
 
-            // var autorModel = new AutorEditViewModel();
-            // autorModel.Id = autor.Id;
-            // autorModel.Contemporaneo = autor.Contemporaneo;
-            // autorModel.Nombre = autor.Nombre;
-            // autorModel.Nacionalidad = autor.Nacionalidad;
+            // PROBANDO:
+            // Tengo que crear el autorVM porque me lo pide la vista
+            // Tengo el VMEdit, le devuelvo el mismo tipo y lo uso
+            // en la vista Edit.
+
+            var autorModel = new AutorEditViewModel();
+            autorModel.Id = autor.Id;
+            autorModel.Contemporaneo = autor.Contemporaneo;
+            autorModel.Nombre = autor.Nombre;
+            autorModel.Nacionalidad = autor.Nacionalidad;
                         
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(autor);
+                    _context.Update(autorModel); //esto
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
