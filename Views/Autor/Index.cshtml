@@ -1,4 +1,6 @@
-@model IEnumerable<HerrProgLibreriaDigital.Models.Autor>
+@using HerrProgLibreriaDigital.ViewModels
+
+@model AutorViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,23 +11,31 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div class="row">
+    <form method="get" asp-action="Index" asp-controller="Autor">
+        <div class="col-6 form-group">
+            <input class="form-control" asp-for="AutorName">
+        </div>
+        <button class="btn btn-primary">Buscar</button>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Autores[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nacionalidad)
+                @Html.DisplayNameFor(model => model.Autores[0].Nacionalidad)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contemporaneo)
+                @Html.DisplayNameFor(model => model.Autores[0].Contemporaneo)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Autores) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)

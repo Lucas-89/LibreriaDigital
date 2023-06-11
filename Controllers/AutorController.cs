@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HerrProgLibreriaDigital.Data;
 using HerrProgLibreriaDigital.Models;
+using HerrProgLibreriaDigital.ViewModels;
 
 namespace HerrProgLibreriaDigital.Controllers
 {
@@ -23,12 +24,16 @@ namespace HerrProgLibreriaDigital.Controllers
         public async Task<IActionResult> Index(string AutorName)
         {
             var query = from autor in _context.Autor select autor;
-            if (string.IsNullOrEmpty(AutorName))
+            if (!string.IsNullOrEmpty(AutorName))
             {
                 query = query.Where(x=> x.Nombre.ToLower().Contains(AutorName.ToLower()));
             }
+
+            var model = new AutorViewModel();
+            model.Autores = await query.ToListAsync();
+
               return _context.Autor != null ? 
-                          View(await query.ToListAsync()) :
+                          View(model) :
                           Problem("Entity set 'AutorContext.Autor'  is null.");
         }
 
@@ -63,9 +68,15 @@ namespace HerrProgLibreriaDigital.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Nacionalidad,Contemporaneo")] Autor autor)
         {
+            var autorModel = new AutorCreateViewModel();
+            autorModel.Id = autor.Id;
+            autorModel.Contemporaneo = autor.Contemporaneo;
+            autorModel.Nombre = autor.Nombre;
+            autorModel.Nacionalidad = autor.Nacionalidad;
+
             if (ModelState.IsValid)
             {
-                _context.Add(autor);
+                _context.Add(autorModel); 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,6 +84,13 @@ namespace HerrProgLibreriaDigital.Controllers
         }
 
         // GET: Autor/Edit/5
+
+        /*
+        ERROR al querer usar el Edit:
+        InvalidOperationException: The model item passed into the ViewDataDictionary is of type 'HerrProgLibreriaDigital.Models.Autor',
+         but this ViewDataDictionary instance requires a model item of type 'HerrProgLibreriaDigital.ViewModels.AutorEditViewModel'.
+        */
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Autor == null)
@@ -93,12 +111,20 @@ namespace HerrProgLibreriaDigital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Nacionalidad,Contemporaneo")] Autor autor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Nacionalidad,Contemporaneo")] AutorEditViewModel autor)
         {
+            
             if (id != autor.Id)
             {
                 return NotFound();
             }
+
+            // var autorModel = new AutorEditViewModel();
+            // autorModel.Id = autor.Id;
+            // autorModel.Contemporaneo = autor.Contemporaneo;
+            // autorModel.Nombre = autor.Nombre;
+            // autorModel.Nacionalidad = autor.Nacionalidad;
+                        
 
             if (ModelState.IsValid)
             {
