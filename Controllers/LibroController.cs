@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HerrProgLibreriaDigital.Data;
 using HerrProgLibreriaDigital.Models;
+using HerrProgLibreriaDigital.ViewModels;
+
 
 namespace HerrProgLibreriaDigital.Controllers
 {
@@ -23,7 +25,22 @@ namespace HerrProgLibreriaDigital.Controllers
         public async Task<IActionResult> Index()
         {
             var autorContext = _context.Libro.Include(l => l.Autor);
-            return View(await autorContext.ToListAsync());
+
+            var model = new LibroViewModel();
+            model.Libros = await autorContext.ToListAsync();
+            return View(model);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         }
 
         // GET: Libro/Details/5
@@ -48,7 +65,7 @@ namespace HerrProgLibreriaDigital.Controllers
         // GET: Libro/Create
         public IActionResult Create()
         {
-            ViewData["AutorId"] = new SelectList(_context.Autor, "Id", "Id");
+            ViewData["AutorId"] = new SelectList(_context.Autor, "Id", "Nombre");
             return View();
         }
 
@@ -59,13 +76,23 @@ namespace HerrProgLibreriaDigital.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Titulo,Genero,CantPaginas,AutorId")] Libro libro)
         {
+           // var autores = _context.Libro.Include(x =>x.AutorId).ToList();
+
+            // var libroModel = new LibroCreateViewModel();
+            // libroModel.Id = libro.Id;
+            // libroModel.Titulo = libro.Titulo;
+            // libroModel.Genero = libro.Genero.ToString();
+            // libroModel.CantPaginas = libro.CantPaginas;
+            // libroModel.AutorId = libro.AutorId;
+
+            ModelState.Remove("Autor");
             if (ModelState.IsValid)
             {
                 _context.Add(libro);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AutorId"] = new SelectList(_context.Autor, "Id", "Id", libro.AutorId);
+            ViewData["AutorId"] = new SelectList(_context.Autor, "Nombre", "Id", libro.Autor);
             return View(libro);
         }
 
@@ -97,7 +124,8 @@ namespace HerrProgLibreriaDigital.Controllers
             {
                 return NotFound();
             }
-
+            
+            ModelState.Remove("Autor");
             if (ModelState.IsValid)
             {
                 try

@@ -1,4 +1,6 @@
-@model IEnumerable<HerrProgLibreriaDigital.Models.Libro>
+@using HerrProgLibreriaDigital.ViewModels
+
+@model LibroViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,22 +15,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Titulo)
+                @Html.DisplayNameFor(model => model.Libros[0].Titulo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genero)
+                @Html.DisplayNameFor(model => model.Libros[0].Genero)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CantPaginas)
+                @Html.DisplayNameFor(model => model.Libros[0].CantPaginas)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Autor)
+                @Html.DisplayNameFor(model => model.Libros[0].AutorId)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Libros) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Titulo)

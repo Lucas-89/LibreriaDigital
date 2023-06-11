@@ -8,7 +8,7 @@ namespace HerrProgLibreriaDigital.Models
 {
     public class Libro
     {
-         public int Id {get;set;}
+        public int Id {get;set;}
         public string Titulo {get;set;}
         public TipoGenero Genero {get;set;}
         public int CantPaginas{get;set;}

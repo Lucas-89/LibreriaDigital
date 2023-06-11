@@ -29,6 +29,8 @@ namespace HerrProgLibreriaDigital.Controllers
                 query = query.Where(x=> x.Nombre.ToLower().Contains(AutorName.ToLower()));
             }
 
+            var libros = query.Include(x => x.Libros).Select(x =>x.Libros).ToList();
+
             var model = new AutorViewModel();
             model.Autores = await query.ToListAsync();
 
@@ -45,14 +47,20 @@ namespace HerrProgLibreriaDigital.Controllers
                 return NotFound();
             }
 
-            var autor = await _context.Autor
+            var autor = await _context.Autor.Include(x => x.Libros)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (autor == null)
             {
                 return NotFound();
             }
 
-            return View(autor);
+            var viewModel = new AutorDetailViewModel();
+            viewModel.Id = autor.Id;
+            viewModel.Nombre = autor.Nombre;
+            viewModel.Nacionalidad = autor.Nacionalidad;
+            viewModel.Libros = autor.Libros != null? autor.Libros : new List<Libro>();
+
+            return View(viewModel);
         }
 
         // GET: Autor/Create
@@ -66,21 +74,23 @@ namespace HerrProgLibreriaDigital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Nacionalidad,Contemporaneo")] AutorCreateViewModel autor)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Nacionalidad,Contemporaneo")] AutorCreateViewModel autor) //recibo un Autor
         {
-            var autorModel = new Autor();
-            autorModel.Id = autor.Id;
-            autorModel.Contemporaneo = autor.Contemporaneo;
-            autorModel.Nombre = autor.Nombre;
-            autorModel.Nacionalidad = autor.Nacionalidad;
+            // Estoy usando el VM Create a ver si funciona
+
+            var autorrecibido = new Autor(); // lo transformo en Autor
+            autorrecibido.Id = autor.Id;
+            autorrecibido.Contemporaneo = autor.Contemporaneo;
+            autorrecibido.Nombre = autor.Nombre;
+            autorrecibido.Nacionalidad = autor.Nacionalidad;
 
             if (ModelState.IsValid)
             {
-                _context.Add(autorModel); 
+                _context.Add(autorrecibido); // Devuelvo VM
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(autor);
+            return View(autorrecibido); //esto no sirve pero vamos a probarlo
         }
 
         // GET: Autor/Edit/5
@@ -117,25 +127,14 @@ namespace HerrProgLibreriaDigital.Controllers
             if (id != autor.Id)
             {
                 return NotFound();
-            }
+            }                   
 
-            // PROBANDO:
-            // Tengo que crear el autorVM porque me lo pide la vista
-            // Tengo el VMEdit, le devuelvo el mismo tipo y lo uso
-            // en la vista Edit.
-
-            var autorModel = new AutorEditViewModel();
-            autorModel.Id = autor.Id;
-            autorModel.Contemporaneo = autor.Contemporaneo;
-            autorModel.Nombre = autor.Nombre;
-            autorModel.Nacionalidad = autor.Nacionalidad;
-                        
-
+            ModelState.Remove("Libros");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(autorModel); //esto
+                    _context.Update(autor); //esto
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
