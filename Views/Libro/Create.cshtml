@@ -15,13 +15,13 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
+                <label asp-for="Libro.Titulo" class="control-label"></label>
+                <input asp-for="Libro.Titulo" class="form-control" />
+                <span asp-validation-for="Libro.Titulo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Genero" class="control-label"></label>
-                <select asp-for="Genero" class="form-control">
+                <label asp-for="Libro.Genero" class="control-label"></label>
+                <select asp-for="Libro.Genero" class="form-control">
                     <option value="0">Policial</option>
                     <option value="1">Ciencia Ficcion</option>
                     <option value="2">Terror</option>
@@ -29,17 +29,17 @@
                     <option value="4">Suspenso</option>
                     <option value="5">Cientifico</option>
                 </select>
-                <span asp-validation-for="Genero" class="text-danger"></span>
+                <span asp-validation-for="Libro.Genero" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CantPaginas" class="control-label"></label>
-                <input asp-for="CantPaginas" class="form-control" />
-                <span asp-validation-for="CantPaginas" class="text-danger"></span>
+                <label asp-for="Libro.CantPaginas" class="control-label"></label>
+                <input asp-for="Libro.CantPaginas" class="form-control" />
+                <span asp-validation-for="Libro.CantPaginas" class="text-danger"></span>
             </div>
           
             <div class="form-group">
-                <label asp-for="AutorId" class="control-label"></label>
-                <select asp-for="AutorId" class ="form-control" asp-items="ViewBag.AutorId"></select>
+                <label asp-for="Libro.AutorId" class="control-label"></label>
+                <select asp-for="Libro.AutorId" class ="form-control" asp-items="ViewBag.AutorId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

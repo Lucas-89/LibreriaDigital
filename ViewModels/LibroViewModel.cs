@@ -11,6 +11,7 @@ namespace HerrProgLibreriaDigital.ViewModels
     {
         public List<Libro> Libros {get;set;} = new List<Libro>();
         public string LibroName {get;set;}
+        public Libro Libro{get;set;}
         
     }
 }
