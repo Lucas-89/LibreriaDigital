@@ -28,18 +28,7 @@ namespace HerrProgLibreriaDigital.Controllers
 
             var model = new LibroViewModel();
             model.Libros = await autorContext.ToListAsync();
-            return View(model);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+            return View(model);        
         
         }
 

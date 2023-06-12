@@ -15,6 +15,7 @@ namespace HerrProgLibreriaDigital.ViewModels
         public int CantPaginas{get;set;}
         public int AutorId{get;set;}
         //public List<Autor> autores{get;set;} = new List<Autor>();
-       // public List<Sucursal> Sucursales {get;set;} = new List<Sucursal>();
+        public List<int> SucursalElegida {get;set;} =new List<int>();
+        public List<Sucursal> Sucursales {get;set;} 
     }
 }
